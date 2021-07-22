@@ -1,8 +1,17 @@
 // Import Express 
 const express = require('express');
 
+// Imports cors 
+const cors = require('cors');
+
 // Import Mongoose
 const mongoose = require('mongoose');
+
+// Import du router user 
+const userRoutes = require('./routes/user');
+
+// Import du router sauce 
+// const userRoutes = require('./routes/sauce');
 
 
 const app = express();
@@ -21,23 +30,17 @@ app.use((req, res, next) => {
     next();
   });
 
-app.use((req, res, next) => {
-  console.log('Requête reçue !');
-  next();
-});
+app.use(express.urlencoded({
+  extended: true
+}));
+app.use(express.json());
 
-app.use((req, res, next) => {
-  res.status(201);
-  next();
-});
+// Enable All CORS Requests
+app.use(cors());
 
-app.use((req, res, next) => {
-  res.json({ message: 'Votre requête a bien été reçue !' });
-  next();
-});
+// Import des logiques de routing user(auth) + sauce
+app.use('/api/auth', userRoutes);
+// app.use('/api/sauces', sauceRoutes);
 
-app.use((req, res, next) => {
-  console.log('Réponse envoyée avec succès !');
-});
 
 module.exports = app;
