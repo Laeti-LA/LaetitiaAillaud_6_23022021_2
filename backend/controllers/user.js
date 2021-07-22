@@ -1,9 +1,8 @@
 // Import du package de chiffrement Bcrypt
 const bcrypt = require('bcrypt');
 
-
 // Import modèle de données user
-const user = require('../models/user');
+const User = require('../models/user');
 
 // Fonction pour créer et enregistrer un compte utilisateur 
 exports.signup = (req, res, next) => {
