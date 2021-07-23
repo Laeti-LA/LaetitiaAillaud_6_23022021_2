@@ -14,7 +14,7 @@ const sauceCtrl = require('../controllers/sauce');
 
 // ------------ ROUTES -------------- 
 // Import de la route n°5 POST /api/sauces -> créer une nouvelle sauce
-router.post('/', auth, multer, sauceCtrl.createSauce);
+router.post('/', multer, sauceCtrl.createSauce);
   
 // Import de la route n°3 GET /api/sauces -> récupérer toutes les sauces
 router.use('/', auth, sauceCtrl.getAllSauces);

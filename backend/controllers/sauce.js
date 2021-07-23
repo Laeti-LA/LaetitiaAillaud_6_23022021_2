@@ -1,18 +1,28 @@
-
+// Import modèle de données sauce
 const Sauce = require('../models/sauce');
 
+// Import package file system de node (accès aux différentes opérations liées au système de fichiers)
+const fs = require('fs'); 
+
+// ------------------------------------- FONCTIONS -------------------------------------
 // Fonction pour créer une nouvelle sauce
 exports.createSauce = (req, res, next) => {
-    const sauceObject = JSON.parse(req.body.thing);
+    const sauceObject = JSON.parse(req.body.sauce);
       delete sauceObject._id; // Suppression id généré par le frontend car la BDD va en générer un
+      sauceObject.likes = 0;
+	  sauceObject.dislikes = 0;
+	  sauceObject.usersLiked = [];
+	  sauceObject.usersDisliked = [];
       // Créa constante avec nouvelle instance du modèle Thing 
       const sauce = new Sauce({
         // Opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body
         ...sauceObject,
-        // Pour générer url image => protocol, nom d'hote, nom du fichier 
+        // Pour générer l'url de l'image => protocol, nom d'hote, nom du fichier 
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
       });
-      sauce.save() // Le modèle comporte une méthode save() qui enregistre la Thing dans la BDD
+      console.log(sauceObject);
+      console.log(sauce);
+      sauce.save() // Le modèle comporte une méthode save() qui enregistre la sauce dans la BDD
         // La méthode save() renvoie une Promise 
         // Réponse de réussite, code 201 : 
         .then(() => res.status(201).json({message: 'objet enregistré'}))
@@ -54,9 +64,23 @@ exports.modifySauce = (req, res, next) => {
 
 // Route n°7 DELETE : supprimer une sauce 
 exports.deleteSauce = (req, res, next) => {
-    Sauce.deleteOne({ _id: req.params.id })
-      .then(() => res.status(200).json({ message: 'La sauce a été supprimée'}))
-      .catch(error => res.status(400).json({ error }));
-};
+    Sauce.findOne({ _id: req.params.id })
+      .then(sauce => {
+        // 1ère étape : supprimer l'image du dossier images
+        // Récupération nom du fichier 
+        const filename = sauce.imageUrl.split('/images/')[1]; //2e élément du tableau créé avec split = nom du fichier 
+        // Appel de la méthode unlink du package fs = pour supprimer un fichier 
+        fs.unlink(`images/${filename}`, () => {
+          // Callback (ce qu'il faut faire une fois le fichier supprimé)
+          // Suppression de l'objet dans la base (après que le fichier ait été supprimé) 
+          // grâce à la méthode deleteOne avec comme argument l'objet de comparaison (celui à supprimer)
+          Sauce.deleteOne({ _id: req.params.id })
+            .then(() => res.status(200).json({ message: 'La sauce a été supprimée !'}))
+            .catch(error => res.status(400).json({ error }));
+        });
+      })
+      .catch(error => res.status(500).json({ error }));
+    // Méthode deleteOne 
+}
 
 // Route n°8 POST : ajouter un like ou un dislike 
