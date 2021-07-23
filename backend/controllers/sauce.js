@@ -3,33 +3,23 @@ const Sauce = require('../models/sauce');
 
 // Fonction pour créer une nouvelle sauce
 exports.createSauce = (req, res, next) => {
-  const sauce = new Sauce({
-    userId: req.body.title,
-    name: req.body.name,
-    manufacturer: req.body.manufacturer,
-    description: req.body.description,
-    mainPepper: req.body.mainPepper,
-    imageUrl: req.body.imageUrl,
-    heat: req.body.heat,
-    likes: req.body.likes,
-    dislikes: req.body.dislikes,
-    usersLiked: req.body.usersLiked,
-    usersDisliked: req.body.usersDisliked
-  });
-  sauce.save().then(
-    () => {
-      res.status(201).json({
-        message: 'Sauce créée avec succès!'
+    const sauceObject = JSON.parse(req.body.thing);
+      delete sauceObject._id; // Suppression id généré par le frontend car la BDD va en générer un
+      // Créa constante avec nouvelle instance du modèle Thing 
+      const sauce = new Sauce({
+        // Opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body
+        ...sauceObject,
+        // Pour générer url image => protocol, nom d'hote, nom du fichier 
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
       });
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
-};
+      sauce.save() // Le modèle comporte une méthode save() qui enregistre la Thing dans la BDD
+        // La méthode save() renvoie une Promise 
+        // Réponse de réussite, code 201 : 
+        .then(() => res.status(201).json({message: 'objet enregistré'}))
+        // Réponse d'erreur, code 400
+        .catch(error => res.status(400).json({error}));
+    };
+  
 
 // Route n°3 GET : récupérer toutes les sauces 
 exports.getAllSauces = (req, res, next) => {
@@ -47,7 +37,17 @@ exports.getOneSauce = (req, res, next) => {
 
 // Route n°6 PUT : modifier une sauce 
 exports.modifySauce = (req, res, next) => {
-    Sauce.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+    // création d'un objet thingObject qui regarde si req.file existe ou non
+    const sauceObject = req.file ?
+    {
+      // Si req.file existe : on traite la nouvelle image
+      ...JSON.parse(req.body.thing),
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : { ...req.body}; // Sinon : on traite simplement l'objet entrant
+    // Méthode updateOne 
+    // Premier argument : objet de comparaison (celui à modifier), 
+    // Second argument : nouvelle version de l'objet
+    Sauce.updateOne({ _id: req.params.id }, { ...thingObject, _id: req.params.id })
       .then(() => res.status(200).json({ message: 'La sauce a été modifiée'}))
       .catch(error => res.status(400).json({ error }));
 };

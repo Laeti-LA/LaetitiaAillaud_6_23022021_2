@@ -7,6 +7,9 @@ const cors = require('cors');
 // Import Mongoose
 const mongoose = require('mongoose');
 
+// Import pour accéder au path du serveur
+const path = require('path');
+
 // Import du router user 
 const userRoutes = require('./routes/user');
 // Import du router sauce 
@@ -35,6 +38,9 @@ app.use(express.json());
 
 // Enable All CORS Requests
 app.use(cors());
+
+// Gestionnaire de routage
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Import des logiques de routing user(auth) + sauce
 app.use('/api/auth', userRoutes);
