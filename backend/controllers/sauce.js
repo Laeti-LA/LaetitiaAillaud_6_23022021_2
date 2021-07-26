@@ -31,11 +31,11 @@ exports.createSauce = (req, res, next) => {
     };
   
 
-// Route n°3 GET : récupérer toutes les sauces 
+// Route n°3 GET : récupérer toutes les sauces avec la méthode find
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
       .then(sauces => res.status(200).json(sauces))
-      .catch(error => res.status(400).json({ error }));
+      .catch(error => res.status(400).json({error}));
 };
 
 // Route n°4 GET : récupérer une sauce à partir de son id
