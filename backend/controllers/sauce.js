@@ -31,8 +31,9 @@ exports.createSauce = (req, res, next) => {
     };
   
 
-// Route n°3 GET : récupérer toutes les sauces avec la méthode find
+// Route n°3 GET : récupérer toutes les sauces avec la méthode find du modèle Mongoose
 exports.getAllSauces = (req, res, next) => {
+    // Récupération de la liste de things 
     Sauce.find()
       .then(sauces => res.status(200).json(sauces))
       .catch(error => res.status(400).json({error}));
