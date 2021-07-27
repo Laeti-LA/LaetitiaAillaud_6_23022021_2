@@ -50,7 +50,7 @@ exports.modifySauce = (req, res, next) => {
     // Méthode updateOne 
     // Premier argument : objet de comparaison (celui à modifier), 
     // Second argument : nouvelle version de l'objet
-    Sauce.updateOne({ _id: req.params.id }, { ...thingObject, _id: req.params.id })
+    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
       .then(() => res.status(200).json({ message: 'La sauce a été modifiée'}))
       .catch(error => res.status(400).json({ error }));
 };
