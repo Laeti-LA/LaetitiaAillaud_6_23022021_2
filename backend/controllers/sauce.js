@@ -31,28 +31,20 @@ exports.createSauce = (req, res, next) => {
     };
   
 
-// Route n°3 GET : récupérer toutes les sauces avec la méthode find du modèle Mongoose
-exports.getAllSauces = (req, res, next) => {
-    // Récupération de la liste de things 
-    Sauce.find()
-      .then(sauces => res.status(200).json(sauces))
-      .catch(error => res.status(400).json({error}));
-};
-
 // Route n°4 GET : récupérer une sauce à partir de son id
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
-      .then(sauce => res.status(200).json(sauce))
-      .catch(error => res.status(404).json({ error }));
+      .then((sauce) => res.status(200).json(sauce))
+      .catch((error) => res.status(404).json({ error }));
 };
 
 // Route n°6 PUT : modifier une sauce 
 exports.modifySauce = (req, res, next) => {
-    // création d'un objet thingObject qui regarde si req.file existe ou non
+    // création d'un objet sauceObject qui regarde si req.file existe ou non
     const sauceObject = req.file ?
     {
       // Si req.file existe : on traite la nouvelle image
-      ...JSON.parse(req.body.thing),
+      ...JSON.parse(req.body.sauce),
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body}; // Sinon : on traite simplement l'objet entrant
     // Méthode updateOne 
@@ -83,5 +75,13 @@ exports.deleteSauce = (req, res, next) => {
       .catch(error => res.status(500).json({ error }));
     // Méthode deleteOne 
 }
+
+// Route n°3 GET : récupérer toutes les sauces avec la méthode find du modèle Mongoose
+exports.getAllSauces = (req, res, next) => {
+  // Récupération de la liste de things 
+  Sauce.find()
+    .then(sauces => res.status(200).json(sauces))
+    .catch(error => res.status(400).json({error}));
+};
 
 // Route n°8 POST : ajouter un like ou un dislike 
