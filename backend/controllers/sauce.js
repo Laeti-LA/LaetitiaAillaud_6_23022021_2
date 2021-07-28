@@ -25,7 +25,7 @@ exports.createSauce = (req, res, next) => {
       sauce.save() // Le modèle comporte une méthode save() qui enregistre la sauce dans la BDD
         // La méthode save() renvoie une Promise 
         // Réponse de réussite, code 201 : 
-        .then(() => res.status(201).json({message: 'objet enregistré'}))
+        .then(() => res.status(201).json({message: 'La sauce a été créée avec succès'}))
         // Réponse d'erreur, code 400
         .catch(error => res.status(400).json({error}));
     };
@@ -51,7 +51,7 @@ exports.modifySauce = (req, res, next) => {
     // Premier argument : objet de comparaison (celui à modifier), 
     // Second argument : nouvelle version de l'objet
     Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-      .then(() => res.status(200).json({ message: 'La sauce a été modifiée'}))
+      .then(() => res.status(200).json({ message: 'La sauce a été modifiée avec succès'}))
       .catch(error => res.status(400).json({ error }));
 };
 
@@ -68,20 +68,29 @@ exports.deleteSauce = (req, res, next) => {
           // Suppression de l'objet dans la base (après que le fichier ait été supprimé) 
           // grâce à la méthode deleteOne avec comme argument l'objet de comparaison (celui à supprimer)
           Sauce.deleteOne({ _id: req.params.id })
-            .then(() => res.status(200).json({ message: 'La sauce a été supprimée !'}))
+            .then(() => res.status(200).json({ message: 'La sauce a été supprimée avec succès'}))
             .catch(error => res.status(400).json({ error }));
         });
       })
       .catch(error => res.status(500).json({ error }));
-    // Méthode deleteOne 
 }
 
 // Route n°3 GET : récupérer toutes les sauces avec la méthode find du modèle Mongoose
 exports.getAllSauces = (req, res, next) => {
-  // Récupération de la liste de things 
+  // Récupération de la liste de sauces 
   Sauce.find()
     .then(sauces => res.status(200).json(sauces))
     .catch(error => res.status(400).json({error}));
 };
 
-// Route n°8 POST : ajouter un like ou un dislike 
+// Route n°8 POST : ajouter ou retirer un like 
+exports.rateOneSauce = (req, res, next) => { 
+  // Récupération de la sauce 
+  Sauce.findOne({ _id: req.params.id })
+  .then( sauce => {
+    // Si like = 1 : Ajout du l'utilisateur dans le tableau des likes
+    // Si like = -1 : Ajout de l'utilisateur dans le tableau des dislikes
+    // Si like = 0 : Retrait de l'utilisateur du tableau dans lequel il était
+  })
+  .catch(error => res.status(400).json({error}));
+};
