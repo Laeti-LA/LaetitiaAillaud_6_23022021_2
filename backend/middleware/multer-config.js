@@ -1,7 +1,7 @@
 // Import multer 
 const multer = require('multer');
 
-const MINE_TYPES = {
+const MIME_TYPES = {
     'image/jpg': 'jpg',
     'image/jpeg': 'jpg',
     'image/png': 'png'
@@ -13,13 +13,14 @@ const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         callback(null, 'images')
     },
-    // filename = on génère un nom de fichier suffisamment unique 
+    // filename = on génère un nom de fichier suffisamment unique : 
     filename: (req, file, callback) => {
-        // propriété originalname + méthodes split et join pour remplacer les espaces par des underscores
+        // Propriété originalname + méthodes split/join pour remplacer les espaces par des underscores
         const name = file.originalname.split(' ').join('_');
-        const extension = MINE_TYPES[file.minetype];
+        const fileName = name.split('.', [1]);
+        const extension = MIME_TYPES[file.mimetype];
         // Date.now pour ajouter un time stamp à la milliseconde pour rendre le nom de fichier unique
-        callback(null, name + Date.now() + '.' + extension);
+        callback(null, fileName + Date.now() + '.' + extension);
     }
 });
 
