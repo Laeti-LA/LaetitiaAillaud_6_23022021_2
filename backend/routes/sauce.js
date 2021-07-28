@@ -25,5 +25,5 @@ router.delete('/:id', auth, sauceCtrl.deleteSauce);
 // Import de la route n°3 GET /api/sauces -> récupérer toutes les sauces
 router.get('/', auth, sauceCtrl.getAllSauces);
 // Import de la route n°8 POST /api/sauces/:id/like -> ajouter un like ou un dislike 
-router.post('/', auth, sauceCtrl.rateOneSauce);
+router.post('/:id/like', auth, sauceCtrl.rateOneSauce);
 module.exports = router;
