@@ -85,52 +85,51 @@ exports.getAllSauces = (req, res, next) => {
 
 // Route n°8 POST : ajouter ou retirer un like 
 exports.rateOneSauce = (req, res, next) => { 
-  // Récupération de la sauce 
-  Sauce.findOne({ _id: req.params.id })
-  .then( sauce => {
-    // Si like = 1 : 
-    if (req.body.like === 1) {
-      Sauce.updateOne({ _id: req.params.id }, 
-        // Modification du nb de likes avec la méthode $inc de MongoDB
-        {$inc: {likes: +1}, 
-        // Ajout de l'utilisateur dans le tableau des likes avec la méthode $push de MongoDB
-        $push: {usersLiked: req.body.userId}})
-      .then(() => res.status(200).json({ message: 'Vous avez aimé cette sauce'}))
-      .catch(error => res.status(400).json({ error }));
-    }
-    // Si like = -1 : Ajout de l'utilisateur dans le tableau des dislikes
-    if (req.body.like === -1) {
-      Sauce.updateOne({ _id: req.params.id }, 
-        // Modification du nb de dislikes avec la méthode $inc de MongoDB
-        {$inc: {dislikes: +1}, 
-        // Ajout de l'utilisateur dans le tableau des likes avec la méthode $push de MongoDB
-        $push: {usersDisliked: req.body.userId}})
-      .then(() => res.status(200).json({ message: 'Vous n\'aimez pas cette sauce'}))
-      .catch(error => res.status(400).json({ error }));      
-    }
-    // Si like = 0 : Retrait de l'utilisateur du tableau dans lequel il était
-    if (req.body.like === 0) {
-      // Si l'id de l'utilisateur se trouve dans le tableau des likes
-      if (sauce.usersLiked.includes(req.body.userId)) {
-        Sauce.updateOne({ _id: req.params.id }, 
-          // Modification du nb de likes avec la méthode $inc de MongoDB
-          {$inc: {likes: -1}, 
-          // Retrait de l'utilisateur dans le tableau des likes avec la méthode $pull de MongoDB
-          $pull: {usersLiked: req.body.userId}})
-        .then(() => res.status(200).json({ message: 'Vous n\'aimez plus cette sauce'}))
-        .catch(error => res.status(400).json({ error }));
-      }
-      // Si l'id de l'utilisateur se trouve dans le tableau des dislikes
-      if (sauce.usersDisliked.includes(req.body.userId)) {
-        Sauce.updateOne({ _id: req.params.id }, 
-          // Modification du nb de dislikes avec la méthode $inc de MongoDB
-          {$inc: {dislikes: -1}, 
-          // Retrait de l'utilisateur dans le tableau des likes avec la méthode $pull de MongoDB
-          $pull: {usersDisliked: req.body.userId}})
-        .then(() => res.status(200).json({ message: 'Vous avez changé d\'avis sur cette sauce'}))
-        .catch(error => res.status(400).json({ error }));      
-      }
-    }
-  })
-  .catch(error => res.status(400).json({error}));
+  // Si like = 1 : 
+  if (req.body.like === 1) {
+    Sauce.updateOne({ _id: req.params.id }, 
+      // Modification du nb de likes avec la méthode $inc de MongoDB
+      {$inc: {likes: +1}, 
+      // Ajout de l'utilisateur dans le tableau des likes avec la méthode $push de MongoDB
+      $push: {usersLiked: req.body.userId}})
+    .then(() => res.status(200).json({ message: 'Vous avez aimé cette sauce'}))
+    .catch(error => res.status(400).json({ error }));
+  }
+  // Si like = -1 : Ajout de l'utilisateur dans le tableau des dislikes
+  if (req.body.like === -1) {
+    Sauce.updateOne({ _id: req.params.id }, 
+      // Modification du nb de dislikes avec la méthode $inc de MongoDB
+      {$inc: {dislikes: +1}, 
+      // Ajout de l'utilisateur dans le tableau des likes avec la méthode $push de MongoDB
+      $push: {usersDisliked: req.body.userId}})
+    .then(() => res.status(200).json({ message: 'Vous n\'aimez pas cette sauce'}))
+    .catch(error => res.status(400).json({ error }));      
+  }
+  // Si like = 0 : Retrait de l'utilisateur du tableau dans lequel il était
+  if (req.body.like === 0) {
+    Sauce.findOne({ _id: req.params.id })
+      .then(sauce => {
+        // Si l'id de l'utilisateur se trouve dans le tableau des likes
+        if (sauce.usersLiked.includes(req.body.userId)) {
+          Sauce.updateOne({ _id: req.params.id }, 
+            // Modification du nb de likes avec la méthode $inc de MongoDB
+            {$inc: {likes: -1}, 
+            // Retrait de l'utilisateur dans le tableau des likes avec la méthode $pull de MongoDB
+            $pull: {usersLiked: req.body.userId}})
+          .then(() => res.status(200).json({ message: 'Vous n\'aimez plus cette sauce'}))
+          .catch(error => res.status(400).json({ error }));
+        }
+        // Si l'id de l'utilisateur se trouve dans le tableau des dislikes
+        if (sauce.usersDisliked.includes(req.body.userId)) {
+          Sauce.updateOne({ _id: req.params.id }, 
+            // Modification du nb de dislikes avec la méthode $inc de MongoDB
+            {$inc: {dislikes: -1}, 
+            // Retrait de l'utilisateur dans le tableau des likes avec la méthode $pull de MongoDB
+            $pull: {usersDisliked: req.body.userId}})
+          .then(() => res.status(200).json({ message: 'Vous avez changé d\'avis sur cette sauce'}))
+          .catch(error => res.status(400).json({ error }));      
+        }
+      })
+      .catch(error => res.status(400).json({ error })); 
+  }
 };
