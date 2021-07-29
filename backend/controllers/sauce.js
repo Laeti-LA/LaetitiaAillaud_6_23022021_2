@@ -1,11 +1,11 @@
 // Import modèle de données sauce
 const Sauce = require('../models/sauce');
-
 // Import package file system de node (accès aux différentes opérations liées au système de fichiers)
 const fs = require('fs'); 
 
 // ------------------------------------- FONCTIONS -------------------------------------
-// Fonction pour créer une nouvelle sauce
+
+// Route n°4 DELETE : créer une nouvelle sauce 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
       delete sauceObject._id; // Suppression id généré par le frontend car la BDD va en générer un

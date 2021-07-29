@@ -1,15 +1,11 @@
 // Import Express 
 const express = require('express');
-
 // Imports cors 
 const cors = require('cors');
-
 // Import Mongoose
 const mongoose = require('mongoose');
-
 // Import pour accéder au path du serveur
 const path = require('path');
-
 // Import du router user 
 const userRoutes = require('./routes/user');
 // Import du router sauce 
