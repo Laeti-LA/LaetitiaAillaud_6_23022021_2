@@ -10,6 +10,8 @@ const path = require('path');
 const userRoutes = require('./routes/user');
 // Import du router sauce 
 const sauceRoutes = require('./routes/sauce');
+// Import middleware Helmet
+const helmet = require('helmet');
 
 const app = express();
 
@@ -34,6 +36,9 @@ app.use(express.json());
 
 // Enable All CORS Requests
 app.use(cors());
+
+// Protection de l'app contre certaines vulnérabilités via la configuration des en-têtes HTTP
+app.use(helmet());
 
 // Gestionnaire de routage
 app.use('/images', express.static(path.join(__dirname, 'images')));

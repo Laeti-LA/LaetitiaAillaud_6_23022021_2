@@ -6,12 +6,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user'); 
 // Import validator (pour vérifier la validité de l'email et du mdp lors de la création d'un nouvel utilisateur)
 const {validationResult} = require('express-validator');
-// Import du middleware bouncer 
-// const bouncer = require('express-bouncer')(0,0);
 // Import Maskdata pour masquer l'email 
 const maskData = require("maskdata");
-
-
 
 // ------------------------------------- FONCTIONS -------------------------------------
 
@@ -67,8 +63,6 @@ exports.login = (req, res, next) => {
                 return res.status(401).json({ error: 'Utilisateur non trouvé'});
             }
             // Si l'email est trouvé : 
-            // Remise à zéro du délai 
-            // bouncer.reset(req);
             // Comparaison du hash du mdp saisi avec le hash du mdp enregistré sur MongoDB
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
@@ -77,8 +71,6 @@ exports.login = (req, res, next) => {
                         return res.status(401).json({ error: 'Mot de passe incorrect'});   
                     }
                     // Si le mdp est valide : 
-                    // Remise à zéro du délai 
-                    // bouncer.reset(req);
                     // Renvoi du userId et d'un token : 
                     res.status(200).json({
                         userId: user._id,

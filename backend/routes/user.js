@@ -6,14 +6,21 @@ const router = express.Router();
 const validator = require('../middleware/validator');
 // Controller pour associer les fonctions aux différentes routes
 const userCtrl = require('../controllers/user');
-// Import du middleware Bouncer pour limiter le nombre de tentatives de connexion 
-// en imposant un délai entre deux tentatives en cas de 3 échecs de connexion consécutifs 
-const bouncer = require('express-bouncer')(1000, 200000, 3);
+// Import de express-rate-limit 
+const rateLimit = require("express-rate-limit");
+
+// Limitation du nombre de requêtes 
+const reqLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes d'attente
+  max: 3, // 3 requêtes max en 5 min
+  message: "Nombre d'essais maximum atteint, merci de patienter 5 min avant de renouveler la demande."
+});
+
 
 // Import de la route n°1 POST /api/auth/signup -> créer un nouvel utilisateur
 router.post('/signup', validator.signupValidator, userCtrl.signup);
 // Import de la route n°2 POST /api/auth/login -> connecter un utilisateur existant
-router.post('/login', bouncer.block, userCtrl.login);
+router.post('/login', reqLimiter, userCtrl.login);
 
 // Export du routeur
 module.exports = router;
