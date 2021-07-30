@@ -14,6 +14,8 @@ const sauceRoutes = require('./routes/sauce');
 const helmet = require('helmet');
 // Import middleware xss-clean 
 const xss = require('xss-clean');
+// Import cookie-session 
+const cookieSession = require('cookie-session');
 
 const app = express();
 
@@ -38,6 +40,19 @@ app.use(express.json());
 
 // Enable All CORS Requests
 app.use(cors());
+
+// Ajout d'un flag HttpOnly aux cookies (ne fonctionne pas sur les navigateurs obsolètes)
+app.use(
+  cookieSession({
+    name: "session",
+    secret: "s3CR3TsTRinG",
+    cookie: {
+      secure: true,
+      httpOnly: true,
+      domain: "http://localhost:3000/",
+    },
+  })
+);
 
 // Protection de l'app contre certaines vulnérabilités via la configuration des en-têtes HTTP
 app.use(helmet());
