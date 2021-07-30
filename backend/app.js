@@ -12,6 +12,8 @@ const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 // Import middleware Helmet
 const helmet = require('helmet');
+// Import middleware xss-clean 
+const xss = require('xss-clean');
 
 const app = express();
 
@@ -39,6 +41,9 @@ app.use(cors());
 
 // Protection de l'app contre certaines vulnérabilités via la configuration des en-têtes HTTP
 app.use(helmet());
+
+// Protection contre les failles xxs : nettoie les inputs utilisateurs venant du body POST, des requêtes GET et des paramètres d'URL
+app.use(xss());
 
 // Gestionnaire de routage
 app.use('/images', express.static(path.join(__dirname, 'images')));
