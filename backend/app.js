@@ -57,7 +57,7 @@ app.use(
 // Protection de l'app contre certaines vulnérabilités via la configuration des en-têtes HTTP
 app.use(helmet());
 
-// Protection contre les failles xxs : nettoie les inputs utilisateurs venant du body POST, des requêtes GET et des paramètres d'URL
+// Protection contre les failles xxs : nettoie les inputs utilisateurs venant du corps des requêtes POST, des requêtes GET et des paramètres d'URL
 app.use(xss());
 
 // Gestionnaire de routage

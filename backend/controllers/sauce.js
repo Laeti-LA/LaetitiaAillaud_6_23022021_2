@@ -5,7 +5,7 @@ const fs = require('fs');
 
 // ------------------------------------- FONCTIONS -------------------------------------
 
-// Route n°4 DELETE : créer une nouvelle sauce 
+// Route n°5 CREATE : créer une nouvelle sauce 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
       delete sauceObject._id; // Suppression id généré par le frontend car la BDD va en générer un
