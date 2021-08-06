@@ -1,3 +1,5 @@
+// Import dotenv 
+require('dotenv').config();
 // Import Express 
 const express = require('express');
 // Imports cors 
@@ -19,7 +21,8 @@ const cookieSession = require('cookie-session');
 
 const app = express();
 
-mongoose.connect('mongodb+srv://Laeti_LA:SS63nCOINGfB3Gxi@cluster0.izpb1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', 
+// Utiliser des variables d'environnement pour ne pas exposer l'id/mdp Mongoose (ex : dot.env) 
+mongoose.connect(`mongodb+srv://${process.env.ID}:${process.env.MDP}@${process.env.CLUSTER}.mongodb.net/${process.env.DB}?retryWrites=true&w=majority`, 
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie'))

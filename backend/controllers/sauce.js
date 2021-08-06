@@ -10,9 +10,9 @@ exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
       delete sauceObject._id; // Suppression id généré par le frontend car la BDD va en générer un
       sauceObject.likes = 0;
-	  sauceObject.dislikes = 0;
-	  sauceObject.usersLiked = [];
-	  sauceObject.usersDisliked = [];
+	    sauceObject.dislikes = 0;
+	    sauceObject.usersLiked = [];
+	    sauceObject.usersDisliked = [];
       // Créa constante avec nouvelle instance du modèle Thing 
       const sauce = new Sauce({
         // Opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body
@@ -133,3 +133,4 @@ exports.rateOneSauce = (req, res, next) => {
       .catch(error => res.status(400).json({ error })); 
   }
 };
+

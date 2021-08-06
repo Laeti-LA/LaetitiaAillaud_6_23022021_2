@@ -1,4 +1,12 @@
 const http = require('http');
+/* 
+Pour utiliser HTTPS au lieu de HTTP 
+(après avoir obtenu un certificat SSL et générer les fichiers privatekey.pem et certificate.pem): 
+
+cont https = require('https');
+const fs = require('fs'); 
+*/
+
 const app = require('./app');
 
 const normalizePort = val => {
@@ -36,6 +44,15 @@ const errorHandler = error => {
 };
 
 const server = http.createServer(app);
+
+/* Pour utiliser HTTPS au lieu de HTTP 
+(après avoir obtenu un certificat SSL et générer les fichiers privatekey.pem et certificate.pem): 
+
+const options = {
+      key: fs.readFileSync('selfsigned.key'),
+      cert: fs.readFileSync('selfsigned.crt')};
+
+https.createServer(options, app); */
 
 server.on('error', errorHandler);
 server.on('listening', () => {
