@@ -93,7 +93,7 @@ exports.rateOneSauce = (req, res, next) => {
       // Ajout de l'utilisateur dans le tableau des likes avec la méthode $push de MongoDB
       $push: {usersLiked: req.body.userId}})
     .then(() => res.status(200).json({ message: 'Vous avez aimé cette sauce'}))
-    .catch(error => res.status(400).json({ error }));
+    .catch(error => res.status(400).json({ error : 'Requête invalide : impossible de liker la sauce' }));
   }
   // Si like = -1 : Ajout de l'utilisateur dans le tableau des dislikes
   if (req.body.like === -1) {
@@ -103,7 +103,7 @@ exports.rateOneSauce = (req, res, next) => {
       // Ajout de l'utilisateur dans le tableau des likes avec la méthode $push de MongoDB
       $push: {usersDisliked: req.body.userId}})
     .then(() => res.status(200).json({ message: 'Vous n\'aimez pas cette sauce'}))
-    .catch(error => res.status(400).json({ error }));      
+    .catch(error => res.status(400).json({ error : 'Requête invalide : impossible de disliker la sauce' }));      
   }
   // Si like = 0 : Retrait de l'utilisateur du tableau dans lequel il était
   if (req.body.like === 0) {
@@ -117,7 +117,7 @@ exports.rateOneSauce = (req, res, next) => {
             // Retrait de l'utilisateur dans le tableau des likes avec la méthode $pull de MongoDB
             $pull: {usersLiked: req.body.userId}})
           .then(() => res.status(200).json({ message: 'Vous n\'aimez plus cette sauce'}))
-          .catch(error => res.status(400).json({ error }));
+          .catch(error => res.status(400).json({ error : 'Requête invalide : impossible de changer la note de la sauce'}));
         }
         // Si l'id de l'utilisateur se trouve dans le tableau des dislikes
         if (sauce.usersDisliked.includes(req.body.userId)) {
@@ -127,7 +127,7 @@ exports.rateOneSauce = (req, res, next) => {
             // Retrait de l'utilisateur dans le tableau des likes avec la méthode $pull de MongoDB
             $pull: {usersDisliked: req.body.userId}})
           .then(() => res.status(200).json({ message: 'Vous avez changé d\'avis sur cette sauce'}))
-          .catch(error => res.status(400).json({ error }));      
+          .catch(error => res.status(400).json({ error : 'Requête invalide : impossible de changer la note de la sauce'}));      
         }
       })
       .catch(error => res.status(400).json({ error })); 

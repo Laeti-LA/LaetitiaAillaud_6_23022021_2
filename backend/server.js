@@ -3,7 +3,7 @@ const http = require('http');
 Pour utiliser HTTPS au lieu de HTTP 
 (après avoir obtenu un certificat SSL et générer les fichiers privatekey.pem et certificate.pem): 
 
-cont https = require('https');
+const https = require('https');
 const fs = require('fs'); 
 */
 

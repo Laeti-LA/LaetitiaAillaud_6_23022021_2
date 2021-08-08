@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
         } else {
             next();
         }
-    } catch (error) {
-        res.status(401).json({ error: error | 'Requête invalide'});
+    } catch {
+        res.status(401).json({ error: 'Echec authentification' });
     }
 };

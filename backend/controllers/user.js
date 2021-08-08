@@ -37,6 +37,7 @@ exports.signup = (req, res, next) => {
                 email: userEmail,
                 password: hash
             });
+            console.log(user);
             // Ajout de l'utilisateur dans la BDD avec la fonction asynchrone save
             user.save()
                 .then(() => res.status(201).json({ message: 'Nouvel utilisateur créé' }))
@@ -55,6 +56,7 @@ exports.login = (req, res, next) => {
         maskAtTheRate: false
     };
     const userEmail = maskData.maskEmail2(req.body.email, emailMask2Options);
+    console.log(userEmail);
     // Récupération email rentré par l'utilisateur 
     User.findOne({ email: userEmail })
         .then(user => {
